@@ -15,8 +15,8 @@ public class ToDoItemTest {
 
     @Test
     public void constructorTest() {
-        assertEquals("First constructor check" ,"Test TODO",item1.getTask());
-        assertEquals("Second constructor check" ,"Another TODO", item2.getTask());
+        assertEquals("First constructor check", "Test TODO", item1.getTask());
+        assertEquals("Second constructor check", "Another TODO", item2.getTask());
     }
 
     @Test

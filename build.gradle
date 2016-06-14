@@ -3,7 +3,7 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'war'
-apply plugin: 'jetty'
+apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.plugin'
 
 sourceCompatibility = 1.8
 
@@ -13,9 +13,7 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile group: 'org.apache.tomcat', name: 'tomcat-servlet-api', version: '9.0.0.M6'
 }
 
-httpPort = 9000
-stopPort = 9451
-stopKey = 'foo'
 

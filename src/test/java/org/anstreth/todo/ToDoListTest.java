@@ -4,6 +4,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 /**
@@ -80,5 +81,27 @@ public class ToDoListTest {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("TODO List does not contain element 'Four'");
         list.removeItem("Four");
+    }
+
+    @Test
+    public void itemsCompletingTest() {
+        list.addItem("One");
+        list.addItem("Two");
+
+        assertFalse("New item1 is not completed", list.isCompleted("One"));
+        assertFalse("New item2 is not completed", list.isCompleted("Two"));
+
+        list.complete("One");
+        assertTrue("Item1 is completed after completion", list.isCompleted("One"));
+        assertFalse("Item2 is still not completed", list.isCompleted("Two"));
+
+        list.complete("Two");
+        list.uncomplete("One");
+        assertThat("Item1 is not completed after uncompletion", list.isCompleted("One"), is(false));
+        assertThat("Item2 is completed after completion", list.isCompleted("Two"), is(true));
+
+        list.uncomplete("Two");
+        assertThat("Item1 is still not completed", list.isCompleted("One"), is(false));
+        assertThat("Item2 is not completed after uncompletion", list.isCompleted("Two"), is(false));
     }
 }
