@@ -1,6 +1,11 @@
 package org.anstreth.todo;
 
+
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -48,5 +53,23 @@ public class ToDoList {
         if (isCompleted(taskName)) {
             items.put(taskName, false);
         } else throw new IllegalArgumentException(String.format("Task '%s' is not completed", taskName));
+    }
+
+    public List<String> getUncompletedItems() {
+        return items
+                .entrySet()
+                .stream()
+                .filter(e->!e.getValue())
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getCompletedItems() {
+        return items
+                .entrySet()
+                .stream()
+                .filter(Map.Entry::getValue)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
     }
 }

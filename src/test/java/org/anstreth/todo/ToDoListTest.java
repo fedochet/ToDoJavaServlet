@@ -4,6 +4,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
@@ -103,5 +107,62 @@ public class ToDoListTest {
         list.uncomplete("Two");
         assertThat("Item1 is still not completed", list.isCompleted("One"), is(false));
         assertThat("Item2 is not completed after uncompletion", list.isCompleted("Two"), is(false));
+    }
+
+    @Test
+    public void testCompletedAndUncompletedItemsWithCompletions() {
+        list.addItem("One");
+        list.addItem("Two");
+        list.addItem("Three");
+        List<String> expectedUncompleted1 = Arrays.asList("One","Two", "Three");
+        List<String> expectedUncompleted2 = Arrays.asList("Two","Three");
+        List<String> expectedUncompleted3 = Collections.singletonList("Two");
+        List<String> expectedUncompleted4 = Collections.emptyList();
+
+
+        List<String> expectedCompleted1 = Collections.emptyList();
+        List<String> expectedCompleted2 = Arrays.asList("One");
+        List<String> expectedCompleted3 = Arrays.asList("One","Three");
+        List<String> expectedCompleted4 = Arrays.asList("One","Two", "Three");
+
+        assertThat("Uncompleted items are 'One','Two','Three'", list.getUncompletedItems(), is(expectedUncompleted1));
+        assertThat("Completed items are empty", list.getCompletedItems(), is(expectedCompleted1));
+
+        list.complete("One");
+        assertThat("Uncompleted items are 'Two','Three'", list.getUncompletedItems(), is(expectedUncompleted2));
+        assertThat("Completed items are 'One'", list.getCompletedItems(), is(expectedCompleted2));
+
+        list.complete("Three");
+        assertThat("Uncompleted items are 'Two'", list.getUncompletedItems(), is(expectedUncompleted3));
+        assertThat("Completed items are 'One', 'Three'", list.getCompletedItems(), is(expectedCompleted3));
+
+        list.complete("Two");
+        assertThat("Uncompleted items are empty", list.getUncompletedItems(), is(expectedUncompleted4));
+        assertThat("Completed items are 'One','Two','Three'", list.getCompletedItems(), is(expectedCompleted4));
+    }
+
+    @Test
+    public void testCompletedAndUncompletedItemsWithUncompletions() {
+        list.addItem("One");
+        list.addItem("Two");
+        list.addItem("Three");
+
+        List<String> expectedUncompleted1 = Arrays.asList("Two");
+        List<String> expectedUncompleted2 = Arrays.asList("One","Two");
+        List<String> expectedUncompleted3 = Arrays.asList("Two","Three");
+
+        list.complete("One");
+        list.complete("Three");
+        list.complete("Two");
+
+        list.uncomplete("Two");
+        assertThat("Uncompleted items are 'Two'", list.getUncompletedItems(), is(expectedUncompleted1));
+
+        list.uncomplete("One");
+        assertThat("Uncompleted items are 'One','Two'", list.getUncompletedItems(), is(expectedUncompleted2));
+
+        list.uncomplete("Three");
+        list.complete("One");
+        assertThat("Uncompleted items are 'Two', 'Three'", list.getUncompletedItems(), is(expectedUncompleted3));
     }
 }
